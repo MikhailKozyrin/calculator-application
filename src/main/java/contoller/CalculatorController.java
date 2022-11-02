@@ -1,5 +1,6 @@
 package contoller;
 
+import exception.DivisionByZeroException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,40 +22,30 @@ public class CalculatorController {
     }
 
     @GetMapping("/plus")
-    public String plus(@RequestParam(name = "num1", required = false) Integer a,
-                       @RequestParam(name = "num2", required = false) Integer b) {
-        if (a == null || b == null) return "значение не передано";
-        int plus = calculatorService.plus(a, b);
-        return a + " + " + b + " = " + plus;
+    public String plus(@RequestParam int a,
+                       @RequestParam int b) {
+        return generateMessage(a, b, "+", calculatorService.plus(a, b));
     }
 
     @GetMapping("/minus")
-    public String minus(@RequestParam(name = "num1", required = false) Integer a,
-                        @RequestParam(name = "num2", required = false) Integer b) {
-        if (a == null || b == null) return "значение не передано";
-        int minus = calculatorService.minus(a, b);
-        return a + " - " + b + " = " + minus;
+    public String minus(@RequestParam int a,
+                        @RequestParam int b) {
+        return generateMessage(a, b, "-", calculatorService.minus(a, b));
     }
 
     @GetMapping("/multiplication")
-    public String multiple(@RequestParam(name = "num1", required = false) Integer a,
-                           @RequestParam(name = "num2", required = false) Integer b) {
-        if (a == null || b == null) return "значение не передано";
-        int multiple = calculatorService.multiplication(a, b);
-        return a + " * " + b + " = " + multiple;
+    public String multiple(@RequestParam int a,
+                           @RequestParam int b) {
+        return generateMessage(a, b, "*", calculatorService.multiplication(a, b));
     }
 
     @GetMapping("/division")
-    public String division(@RequestParam(name = "num1", required = false) Integer a,
-                           @RequestParam(name = "num2", required = false) Integer b) {
-        if (a == null || b == null) return "значение не передано";
-        double division;
-        try {
-            division = calculatorService.division(a, b);
-        } catch (Throwable e) {
-            return e.getMessage();
-        }
-        return a + " * " + b + " = " + division;
+    public String division(@RequestParam int a, @RequestParam int b) {
+                return generateMessage(a, b, "/", calculatorService.division(a, b));
+
+    }
+
+    private String generateMessage(int a, int b, String operation, int result) {
+        return String.format("%d %s %d = %d", a, operation, b, result);
     }
 }
-
